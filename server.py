@@ -165,6 +165,10 @@ def root():
 	print(app.static_folder)
 	return send_from_directory(app.static_folder, 'index.html')
 
+@app.route('/static/<path:path>')
+def send_static(path):
+	return send_from_directory(app.static_folder+'/static', path)
+
 
 @app.route('/api/on', methods=['GET', 'POST'])
 def apiOn():
