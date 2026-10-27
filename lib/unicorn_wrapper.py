@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import contextlib
 import io
 import colorsys
@@ -103,7 +103,7 @@ class UnicornWrapper:
         return tuple(round(i * 255) for i in colorsys.hsv_to_rgb(h,s,v))
     
     def htmlToRGB(self, html):
-        if len(html) is 6:
+        if len(html) == 6:
             r = int(f"{html[0]}{html[1]}", 16)
             g = int(f"{html[2]}{html[3]}", 16)
             b = int(f"{html[4]}{html[5]}", 16)
@@ -113,4 +113,4 @@ class UnicornWrapper:
             b = int(f"{html[5]}{html[6]}", 16)
         else:
             raise Exception("The Hex value is not in the correct format it should RRGGBB or #RRGGBB the same as HTML")
-        return tuple(r,g,b)
+        return (r, g, b)

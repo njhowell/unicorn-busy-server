@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import json
 
@@ -28,6 +28,7 @@ globalStatusOverwrite = False
 
 # Initialize the Unicorn hat
 unicorn = UnicornWrapper()
+print(f"Detected Unicorn HAT type: {unicorn.getType()}", flush=True)
 
 # get the width and height of the hardware and set it to portrait if its not
 width, height = unicorn.getShape()
@@ -37,7 +38,7 @@ class MyFlaskApp(Flask):
 	def run(self, host=None, port=None, debug=None, load_dotenv=True, **options):
 		if not self.debug or os.getenv('WERKZEUG_RUN_MAIN') == 'true':
 			with self.app_context():
-				startupRainbow()
+				switchOff()
 		super(MyFlaskApp, self).run(host=host, port=port, debug=debug, load_dotenv=load_dotenv, **options)
 
 
@@ -51,7 +52,7 @@ def setColor(r, g, b, brightness=0.5, speed=None):
 	unicorn.show()
 
 	if speed is not None and speed != '':
-		crntT = threading.currentThread()
+		crntT = threading.current_thread()
 		unicorn.clear()
 		while getattr(crntT, "do_run", True):
 			setPixels(r, g, b, brightness)
@@ -131,7 +132,7 @@ def displayRainbow(brightness, speed, run=None):
 		speed = 0.01
 	if brightness is None:
 		brightness = 0.5
-	crntT = threading.currentThread()
+	crntT = threading.current_thread()
 	i = 0.0
 	offset = 30
 	while getattr(crntT, "do_run", True):
@@ -315,13 +316,6 @@ def apiStatus():
 @app.errorhandler(404)
 def not_found(error):
 	return make_response(jsonify({'error': 'Not found'}), 404)
-
-
-def startupRainbow():
-	global blinkThread
-	blinkThread = threading.Thread(target=displayRainbow, args=(1, 0.1, 1))
-	blinkThread.do_run = True
-	blinkThread.start()
 
 
 if __name__ == '__main__':
