@@ -74,7 +74,7 @@ Usage:
 
 # Usage
 
-If you've run the install script (without the -d option) check the Unicorn hat attache to your Pi.  If all has gone according to plan the unicorn hat will be changing colours.  Once its going through all 360 Hues within the HSV spectrum it'll go blank.  As soon as the Uniron hat lights up the `Busylight Server` is ready to start receiving commands.
+If you've run the install script (without the -d option) the `Busylight Server` starts automatically with the Unicorn hat switched off, ready to receive commands. The install script also enables SPI, which the Unicorn HAT Mini needs. To check which hat the server detected, run `journalctl -u busylight | grep "Detected Unicorn HAT"` or call `/api/status` and look at the `unicorn` field.
 
 The front-end is available via `http://<your-ip>:5000/`.
 

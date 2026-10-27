@@ -122,6 +122,11 @@ case $(uname -s) in
                         *)                      show_msg "${RED}${BOLD}Unsupported distribution, please consider submitting a pull request to extend the script${NORMAL}"
                                                 exit 1
                     esac
+                    # The Unicorn HAT Mini talks over SPI, which is off on a fresh Raspberry Pi OS install
+                    if command -v raspi-config > /dev/null; then
+                        show_msg "${GREEN}Enabling SPI...${NORMAL}"
+                        sudo raspi-config nonint do_spi 0
+                    fi
                     # Recent distributions (PEP 668) block system-wide pip installs, so use a virtualenv
                     show_msg "${GREEN}Installing needed files from pip...${NORMAL}"
                     python3 -m venv $INSTALL_DIR/.venv
