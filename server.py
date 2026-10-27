@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import json
 
@@ -51,7 +51,7 @@ def setColor(r, g, b, brightness=0.5, speed=None):
 	unicorn.show()
 
 	if speed is not None and speed != '':
-		crntT = threading.currentThread()
+		crntT = threading.current_thread()
 		unicorn.clear()
 		while getattr(crntT, "do_run", True):
 			setPixels(r, g, b, brightness)
@@ -131,7 +131,7 @@ def displayRainbow(brightness, speed, run=None):
 		speed = 0.01
 	if brightness is None:
 		brightness = 0.5
-	crntT = threading.currentThread()
+	crntT = threading.current_thread()
 	i = 0.0
 	offset = 30
 	while getattr(crntT, "do_run", True):

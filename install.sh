@@ -31,12 +31,9 @@ version() {
 
 installSystemdService() {
     show_msg "${GREEN}Installing Systemd Service...${NORMAL}"
-    sed -i "s+WorkingDirectory=/home/pi/unicorn-busy-server+WorkingDirectory=$INSTALL_DIR+g" $INSTALL_DIR/busylight.service
-    if [[ ! -f /etc/systemd/system/busylight.service ]]; then
-        sudo cp busylight.service /etc/systemd/system/busylight.service
-    else
-        sudo sed -i "s+WorkingDirectory=/home/pi/unicorn-busy-server+WorkingDirectory=$INSTALL_DIR+g" /etc/systemd/system/busylight.service
-    fi
+    sed -i "s+/home/pi/unicorn-busy-server+$INSTALL_DIR+g" $INSTALL_DIR/busylight.service
+    sudo cp $INSTALL_DIR/busylight.service /etc/systemd/system/busylight.service
+    sudo systemctl daemon-reload
 }
 
 enableSystemdService() {
@@ -118,18 +115,25 @@ fi
 
 case $(uname -s) in
     Linux|GNU*)     case $(lsb_release -si) in
-                        Ubuntu | Raspbian)      show_msg "${GREEN}Installing required files from apt...${NORMAL}"
-                                                sudo apt-get install -y python3-pip python3-dev
-                                                if [[ $DEVELOPMENT == "false" ]]; then
-                                                    installSystemdService
-                                                    enableSystemdService
-                                                fi
+                        Ubuntu | Raspbian | Debian)
+                                                show_msg "${GREEN}Installing required files from apt...${NORMAL}"
+                                                sudo apt-get install -y python3-pip python3-dev python3-venv
                                                 ;;
                         *)                      show_msg "${RED}${BOLD}Unsupported distribution, please consider submitting a pull request to extend the script${NORMAL}"
                                                 exit 1
                     esac
+                    # Recent distributions (PEP 668) block system-wide pip installs, so use a virtualenv
                     show_msg "${GREEN}Installing needed files from pip...${NORMAL}"
-                    sudo pip3 install -r ./requirements.txt
+                    python3 -m venv $INSTALL_DIR/.venv
+                    $INSTALL_DIR/.venv/bin/pip install --upgrade pip
+                    $INSTALL_DIR/.venv/bin/pip install -r ./requirements.txt
+                    if [[ -n $SUDO_USER ]]; then
+                        chown -R $SUDO_USER:$SUDO_USER $INSTALL_DIR/.venv
+                    fi
+                    if [[ $DEVELOPMENT == "false" ]]; then
+                        installSystemdService
+                        enableSystemdService
+                    fi
                     ;;
     *)              show_msg "${RED}${BOLD}Unsupported operating system, please consider submitting a pull request to extend the script${NORMAL}"
                     exit 1

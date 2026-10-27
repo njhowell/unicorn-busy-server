@@ -46,7 +46,9 @@ cat install | more # So you can see the contents of the script a page at time
 sudo bash ./install.sh -V -i /home/pi/unicorn-busy-server
 ```
 
-> **Important**: Currently the script only runs on Raspbian/Ubuntu. Feel free to submit a pull request to extend the PR to support other distributions. Or you can make use of the old installation script: `install-fallback.sh`.
+> **Note**: The server needs Python 3 and has been tested on Python 3.14. Python dependencies are installed into a virtual environment in `.venv` inside the install directory, because recent Raspberry Pi OS, Debian and Ubuntu releases block system-wide `pip` installs. Run the server with `./start.sh` or `.venv/bin/python server.py`.
+
+> **Important**: Currently the script only runs on Raspberry Pi OS (Raspbian/Debian) and Ubuntu. Feel free to submit a pull request to extend the PR to support other distributions. Or you can make use of the old installation script: `install-fallback.sh`.
 
 If you want to clone/fork this repo and carry on development on a more sensible machine, you can install the required files without needing to install the service by doing the following:
 
